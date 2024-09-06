@@ -1,0 +1,91 @@
+Untuk start Laravel   = php artisan serve
+Untuk start Tailwinds = npm run dev
+
+
+- Middleware untuk mengecek kondisi data kita dan memutuskan melemparkan user ke mana.
+- Class models merupakan representasi dari tabel database.
+
+============================================================================================
+//DATABASE//
+Jika tidak ada data base:
+1. php artisan migrate:fresh --seed //untuk refresh dan mengirim semua dummy "--seed"== memberitahu alamat seeder
+
+2. Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->string('role')->default('user');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+	tempelkan pada Migrations, 'users' == nama tabel, string('name')== string sebagai tipe data & 'name' sebagai nama kolom.
+
+//End of DATABASE//
+
+============================================================================================
+//Echo in HTML (Special ways)//
+--------------------------------------------------------------------- 
+{{ __("Selamat,anda telah login!") }} ||| {{ auth()->user()->name }}
+---------------------------------------------------------------------
+Untuk memanggil dan menampilkan string(echo) ||| Untuk memanggil dan menampilkan data(variable/objek) 
+
+//End of Echo in HTML (Special ways)//
+
+============================================================================================
+//Controller//
+"php artisan make:controller User\DashboardController" untuk membuat controller untuk user.
+
+//End of Controller//
+
+============================================================================================
+//Route//
+"Route::get('admin-dashboard',[AdminDashboard::class,index])->name('admin-dashboard');"
+untuk mendeklarasikan action yang akan dipanggil berserta dengan alamatnya
+
+//End of Route//
+
+============================================================================================
+//Verify & Auth//
+ public function store(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+        //melakukan pengecekan role
+        if (auth()->user()->role == 'admin') {
+            return redirect()->intended(route('admin-dashboard', absolute: false));
+        } else {
+            return redirect()->intended(route('user-dashboard', absolute: false));
+        }
+    }
+
+
+untuk "auth()->user()" bisa digantikan dengan "Auth::user()".
+//End of Verify & Auth//
+============================================================================================
+
+//Penulisan variable//
+- Uppercase
+- kebab_case
+- camelCase
+- snake-case
+
+//End of Penulisan variable//
+
+//HTML Special chars//
+{{ }} 
+
+ini adalah fungsi dengan panggilan htmlspecialchars, ini adalah fungsi
+kustom yang di siapkan oleh Laravel untuk sebagai ECHO.
+
+//End of HTML Special Char//
+
+//Bagan cara kerja database-route-view//
+
+Database -> diakses oleh Model -> lalu bisa dimediakan/dijembatankan oleh Route dengan URL Controller -> Setelah sudah di pasang jalur/ Route, Controller sekarang mampu meng-akses database dan menampilkan datanya pada "resource/views/example.balde.php" 
+-> sekarang pada example.blade.php sudah menampilkan data dari Controller.  
+
+//Bagan cara kerja database-route-view//
